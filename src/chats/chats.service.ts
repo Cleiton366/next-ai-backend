@@ -1,26 +1,82 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { Chat } from '@prisma/client';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
 
 @Injectable()
 export class ChatsService {
-  create(createChatDto: CreateChatDto) {
-    return 'This action adds a new chat';
+  constructor(private prisma: PrismaService) {}
+  
+  async getChat(id: string): Promise<Chat> {
+    return this.prisma.chat.findUnique({
+      where: { id },
+      include: {
+        messages: true,
+      },
+    });
+  }
+  
+  async getChats(id: string): Promise<Chat[]> {
+    return this.prisma.chat.findMany({
+      where: {
+        userId: id
+      },
+      include: {
+        messages: true,
+      },
+    });
+  }
+  
+  async createChat(data: CreateChatDto): Promise<Chat> {
+    return this.prisma.chat.create({
+      data,
+      include: {
+        messages: true,
+      },
+    });
+  }
+  
+  async archiveChat(id: string): Promise<Chat> {
+    return this.prisma.chat.update({
+      where: { id },
+      data: { isArchived: true },
+    });
+  }
+  
+  async archiveAllChats(userId: string): Promise<void> {
+    this.prisma.chat.updateMany({
+      where: { userId },
+      data: { isArchived: true },
+    });
   }
 
-  findAll() {
-    return `This action returns all chats`;
+  async getArchivedChats(userId: string): Promise<Chat[]> {
+    return this.prisma.chat.findMany({
+      where: {
+        userId,
+        isArchived: true,
+      },
+      include: {
+        messages: true,
+      },
+    });
+  }
+  
+  async unarchiveChat(id: string): Promise<Chat> {
+    return this.prisma.chat.update({
+      where: { id },
+      data: { isArchived: false },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} chat`;
-  }
-
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+  async deleteChat(id: string): Promise<void> {
+    await this.prisma.$transaction([
+      this.prisma.message.deleteMany({
+        where: { chatId: id },
+      }),
+      this.prisma.chat.delete({
+        where: { id },
+      }),
+    ]);
   }
 }
