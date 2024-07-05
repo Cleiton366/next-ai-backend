@@ -6,24 +6,31 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ProvidersService {
-  constructor(private prisma: PrismaService) { }
-
-  createProvider(data: CreateProviderDto) : Promise<Provider> {
-    return this.prisma.provider.create({
-      data,
+  getAllProvider(preferencesId: string): Promise<Provider[]> {
+    return this.prisma.provider.findMany({
+      where: {
+        preferencesId: preferencesId,
+      }
     });
-  }
+}
+constructor(private prisma: PrismaService) { }
 
-  updateProvider(id: string, data: UpdateProviderDto) : Promise<Provider> {
-    return this.prisma.provider.update({
-      where: { id },
-      data,
-    });
-  }
+createProvider(data: CreateProviderDto) : Promise < Provider > {
+  return this.prisma.provider.create({
+    data,
+  });
+}
 
-  removeProvider(id: string) {
-    return this.prisma.provider.delete({
-      where: { id },
-    });
-  }
+updateProvider(id: string, data: UpdateProviderDto) : Promise < Provider > {
+  return this.prisma.provider.update({
+    where: { id },
+    data,
+  });
+}
+
+removeProvider(id: string) {
+  return this.prisma.provider.delete({
+    where: { id },
+  });
+}
 }
