@@ -25,9 +25,9 @@ model User {
 
 model Preferences {
   id              String     @id @default(uuid())
-  defaultProvider String
-  defaultModel    String
-  apiKeys         Provider[]
+  defaultProvider String     @default("server")
+  defaultModel    String     @default("shuttle-2-turbo")
+  apiKeys         Provider[] 
   User            User[]
 }
 
@@ -35,7 +35,7 @@ model Provider {
   id            String      @id @default(uuid())
   name          String
   key           String
-  preferencesId String
+  preferencesId String      
   preferences   Preferences @relation(fields: [preferencesId], references: [id])
 }
 
