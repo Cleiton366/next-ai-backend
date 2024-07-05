@@ -1,11 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Provider } from "@prisma/client";
 
-export class CreateProviderDto implements Provider {
+export class CreateProviderDto {
   
-  @ApiProperty()
-  id: string;
-
   @ApiProperty()
   name: string;
   
