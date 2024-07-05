@@ -1,4 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateUsersPreferenceDto } from './create-users-preference.dto';
 
-export class UpdateUsersPreferenceDto extends PartialType(CreateUsersPreferenceDto) {}
+export class UpdateUsersPreferenceDto extends PartialType(CreateUsersPreferenceDto) {
+  
+  @ApiProperty()
+  defaultProvider: string;
+
+  @ApiProperty()
+  defaultModel: string;
+}

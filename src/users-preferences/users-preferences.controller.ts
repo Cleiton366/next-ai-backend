@@ -1,34 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Body, Param, Put } from '@nestjs/common';
 import { UsersPreferencesService } from './users-preferences.service';
-import { CreateUsersPreferenceDto } from './dto/create-users-preference.dto';
+import { Preferences } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { UserPreferencesEntity } from './entities/user-preferences.entity';
 import { UpdateUsersPreferenceDto } from './dto/update-users-preference.dto';
 
+@ApiTags('Users Preferences')
 @Controller('users-preferences')
 export class UsersPreferencesController {
   constructor(private readonly usersPreferencesService: UsersPreferencesService) {}
 
-  @Post()
-  create(@Body() createUsersPreferenceDto: CreateUsersPreferenceDto) {
-    return this.usersPreferencesService.create(createUsersPreferenceDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.usersPreferencesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersPreferencesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUsersPreferenceDto: UpdateUsersPreferenceDto) {
-    return this.usersPreferencesService.update(+id, updateUsersPreferenceDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersPreferencesService.remove(+id);
+  @Put(':id')
+  @ApiOkResponse({ type: UserPreferencesEntity })
+  async updatePreferences(
+    @Param('id') id: string,
+    @Body() data: UpdateUsersPreferenceDto,
+  ): Promise<Preferences> {
+    return this.usersPreferencesService.updatePreferences(id, data);
   }
 }
