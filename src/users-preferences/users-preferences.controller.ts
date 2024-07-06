@@ -25,18 +25,11 @@ export class UsersPreferencesController {
       return await this.usersPreferencesService.updatePreferences(id, data);
     } catch (error) {
       this.logger.error(error);
-      if (error.message === 'Preferences not found') {
-        throw new HttpException('User not found', 404);
-      } else throw new HttpException(
-        'Internal server error',
-        500,
-        {
-          cause: new Error(),
-          description: 'Some error description'
-        }
+      if (error.message === 'Preferences not found') { throw new HttpException(error.message, 404); }
+      throw new HttpException('Internal server error', 500, { cause: new Error(), description: 'Some error description' }
       );
     }
   }
-  
+
 }
 
