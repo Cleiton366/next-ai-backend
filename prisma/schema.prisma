@@ -19,23 +19,23 @@ model User {
   email          String      @unique
   profilePicture String
   chats          Chat[]
-  preferences    Preferences @relation(fields: [preferencesId], references: [id])
-  preferencesId  String
+  preferences    Preferences ?
 }
 
 model Preferences {
   id              String     @id @default(uuid())
   defaultProvider String     @default("server")
   defaultModel    String     @default("shuttle-2-turbo")
-  apiKeys         Provider[] 
-  User            User[]
+  userId          String     @unique
+  user            User       @relation(fields: [userId], references: [id])
+  apiKeys         Provider[]
 }
 
 model Provider {
   id            String      @id @default(uuid())
   name          String
   key           String
-  preferencesId String      
+  preferencesId String
   preferences   Preferences @relation(fields: [preferencesId], references: [id])
 }
 

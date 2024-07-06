@@ -4,7 +4,6 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "profilePicture" TEXT NOT NULL,
-    "preferencesId" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -12,8 +11,9 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Preferences" (
     "id" TEXT NOT NULL,
-    "defaultProvider" TEXT NOT NULL,
-    "defaultModel" TEXT NOT NULL,
+    "defaultProvider" TEXT NOT NULL DEFAULT 'server',
+    "defaultModel" TEXT NOT NULL DEFAULT 'shuttle-2-turbo',
+    "userId" TEXT NOT NULL,
 
     CONSTRAINT "Preferences_pkey" PRIMARY KEY ("id")
 );
@@ -53,8 +53,11 @@ CREATE TABLE "Chat" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Preferences_userId_key" ON "Preferences"("userId");
+
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_preferencesId_fkey" FOREIGN KEY ("preferencesId") REFERENCES "Preferences"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Preferences" ADD CONSTRAINT "Preferences_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Provider" ADD CONSTRAINT "Provider_preferencesId_fkey" FOREIGN KEY ("preferencesId") REFERENCES "Preferences"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

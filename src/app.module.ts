@@ -5,6 +5,7 @@ import { UsersPreferencesModule } from './users-preferences/users-preferences.mo
 import { PrismaService } from './prisma/prisma.service';
 import { MessagesModule } from './messages/messages.module';
 import { ProvidersModule } from './providers/providers.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ProvidersModule } from './providers/providers.module';
     MessagesModule,
     UsersPreferencesModule,
     ProvidersModule,
+    AuthModule,
   ],
   providers: [PrismaService],
 })
