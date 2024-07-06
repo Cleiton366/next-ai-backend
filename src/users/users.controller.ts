@@ -43,7 +43,7 @@ export class UsersController {
       return user;
     } catch (error) {
       this.logger.error(error);
-      if (error.message === 'User not found') throw new HttpException('User not found', 404);
+      if (error.message === 'User not found') throw new HttpException(error.message, 404);
       throw new HttpException('Internal server error', 500, { cause: new Error()});
     }
   }
@@ -57,7 +57,7 @@ export class UsersController {
       return await this.usersService.deleteUser(id);
     } catch (error) {
       this.logger.error(error);
-      if (error.message === 'User not found') throw new HttpException('User not found', 404);
+      if (error.message === 'User not found') throw new HttpException(error.message, 404);
       throw new HttpException('Internal server error', 500, { cause: new Error()});
     }
   }
