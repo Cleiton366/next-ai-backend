@@ -8,9 +8,12 @@ export class UsersPreferencesService {
   constructor(private prisma: PrismaService) {}
   
   async updatePreferences(id: string, data: UpdateUsersPreferenceDto): Promise<Preferences> {
-    return this.prisma.preferences.update({
+    const preferences = await this.prisma.preferences.update({
       where: { id },
       data,
     });
+
+    if(!preferences) throw new Error('Preferences not found');
+    return preferences;
   }
 }
