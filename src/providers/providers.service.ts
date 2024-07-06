@@ -10,13 +10,24 @@ export class ProvidersService {
   constructor(private prisma: PrismaService) { }
 
   async getAllProvider(preferencesId: string): Promise<Provider[]> {
+
+    const preferences = await this.prisma.preferences.findUnique({
+      where: {
+        id: preferencesId,
+      }
+    });
+
+    if(!preferences) throw new Error('Preferences not found');
+
     const providers = await this.prisma.provider.findMany({
       where: {
         preferencesId: preferencesId,
       }
     });
 
-    var maskedProviders : Provider[] = [];
+    if (!providers) return [];
+
+    var maskedProviders: Provider[] = [];
     providers.map(provider => {
       var maskedProvider = {
         id: provider.id,
@@ -30,21 +41,34 @@ export class ProvidersService {
     return maskedProviders;
   }
 
-  createProvider(data: CreateProviderDto): Promise<Provider> {
-    return this.prisma.provider.create({
+  async createProvider(data: CreateProviderDto): Promise<Provider> {
+    if(!data.key) throw new Error('Key cannot be empty');
+    if(!data.name) throw new Error('Provider name cannot be empty');
+    if(!data.preferencesId) throw new Error('Preferences ID cannot be empty');
+
+    return await this.prisma.provider.create({
       data,
     });
   }
 
-  updateProvider(id: string, data: UpdateProviderDto): Promise<Provider> {
-    return this.prisma.provider.update({
+  async updateProvider(id: string, data: UpdateProviderDto): Promise<Provider> {
+    if(!data.key) throw new Error('Key cannot be empty');
+    if(!data.preferencesId) throw new Error('Preferences ID cannot be empty');
+
+    return await this.prisma.provider.update({
       where: { id },
       data,
     });
   }
 
-  removeProvider(id: string) {
-    return this.prisma.provider.delete({
+  async removeProvider(id: string): Promise<void> {
+    const provider = await this.prisma.provider.findUnique({
+      where: { id },
+    });
+    
+    if(!provider) throw new Error('Provider not found');
+
+    await this.prisma.provider.delete({
       where: { id },
     });
   }

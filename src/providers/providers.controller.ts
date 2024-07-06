@@ -1,36 +1,70 @@
-import { Controller, Post, Body, Patch, Param, Delete, Get } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Delete, Get, HttpException, Logger } from '@nestjs/common';
 import { ProvidersService } from './providers.service';
 import { CreateProviderDto } from './dto/create-provider.dto';
 import { UpdateProviderDto } from './dto/update-provider.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ProviderEntity } from './entities/provider.entity';
 
 @ApiTags('Providers')
 @Controller('providers')
 export class ProvidersController {
-  constructor(private readonly providersService: ProvidersService) {}
+  constructor(private readonly providersService: ProvidersService) { }
+  private readonly logger = new Logger(ProvidersController.name);
 
   @Get('preference/:preferencesId')
   @ApiOkResponse({ type: ProviderEntity, isArray: true })
-  getAllProvider(@Param('preferencesId') preferencesId: string) {
-    return this.providersService.getAllProvider(preferencesId);
+  @ApiNotFoundResponse({ description: 'Preferences not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  async getAllProvider(@Param('preferencesId') preferencesId: string) {
+    try {
+      return await this.providersService.getAllProvider(preferencesId);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message === 'Preferences not found') throw new HttpException(error.message, 404);
+      throw new HttpException('Internal server error', 500, { cause: new Error() });
+    }
   }
 
   @Post()
   @ApiCreatedResponse({ type: ProviderEntity })
-  create(@Body() createProviderDto: CreateProviderDto) {
-    return this.providersService.createProvider(createProviderDto);
+  @ApiBadRequestResponse({ description: 'Invalid Request' })
+  async create(@Body() createProviderDto: CreateProviderDto) {
+    try {
+      return await this.providersService.createProvider(createProviderDto);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message === 'Key cannot be empty'
+        || error.message === 'Provider name cannot be empty'
+        || error.message === 'Preferences ID cannot be empty'
+      ) throw new HttpException(error.message, 400);
+      throw new HttpException('Internal server error', 500, { cause: new Error() });
+    }
   }
 
   @Patch(':id')
   @ApiOkResponse({ type: ProviderEntity })
-  update(@Param('id') id: string, @Body() updateProviderDto: UpdateProviderDto) {
-    return this.providersService.updateProvider(id, updateProviderDto);
+  @ApiBadRequestResponse({ description: 'Invalid Request' })
+  async update(@Param('id') id: string, @Body() updateProviderDto: UpdateProviderDto) {
+    try {
+      return await this.providersService.updateProvider(id, updateProviderDto);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message === 'Key cannot be empty') throw new HttpException(error.message, 400);
+      if(error.message === 'Preferences ID cannot be empty') throw new HttpException(error.message, 400);
+      throw new HttpException('Internal server error', 500, { cause: new Error() });
+    }
   }
 
   @Delete(':id')
   @ApiOkResponse()
-  remove(@Param('id') id: string) {
-    return this.providersService.removeProvider(id);
+  @ApiBadRequestResponse({ description: 'Invalid Request' })
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.providersService.removeProvider(id);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message === 'Provider not found') throw new HttpException(error.message, 404);
+      throw new HttpException('Internal server error', 500, { cause: new Error() });
+    }
   }
 }
