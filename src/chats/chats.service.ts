@@ -5,19 +5,23 @@ import { CreateChatDto } from './dto/create-chat.dto';
 
 @Injectable()
 export class ChatsService {
-  constructor(private prisma: PrismaService) {}
-  
+  constructor(private prisma: PrismaService) { }
+
   async getChat(id: string): Promise<Chat> {
-    return this.prisma.chat.findUnique({
+    if (!id) throw new Error('Chat Id cannot be empty');
+    const chat = await this.prisma.chat.findUnique({
       where: { id },
       include: {
         messages: true,
       },
     });
+    if (!chat) throw new Error('Chat not found');
+    return chat;
   }
-  
+
   async getChats(id: string): Promise<Chat[]> {
-    return this.prisma.chat.findMany({
+    if (!id) throw new Error('User Id cannot be empty');
+    return await this.prisma.chat.findMany({
       where: {
         userId: id
       },
@@ -26,32 +30,23 @@ export class ChatsService {
       },
     });
   }
-  
+
   async createChat(data: CreateChatDto): Promise<Chat> {
-    return this.prisma.chat.create({
+    if (!data.userId) throw new Error('User Id cannot be empty');
+    if (!data.name) throw new Error('Chat name cannot be empty');
+
+    return await this.prisma.chat.create({
       data,
       include: {
         messages: true,
       },
     });
   }
-  
-  async archiveChat(id: string): Promise<Chat> {
-    return this.prisma.chat.update({
-      where: { id },
-      data: { isArchived: true },
-    });
-  }
-  
-  async archiveAllChats(userId: string): Promise<void> {
-    this.prisma.chat.updateMany({
-      where: { userId },
-      data: { isArchived: true },
-    });
-  }
 
   async getArchivedChats(userId: string): Promise<Chat[]> {
-    return this.prisma.chat.findMany({
+    if (!userId) throw new Error('User Id cannot be empty');
+
+    return await this.prisma.chat.findMany({
       where: {
         userId,
         isArchived: true,
@@ -61,15 +56,52 @@ export class ChatsService {
       },
     });
   }
-  
-  async unarchiveChat(id: string): Promise<Chat> {
-    return this.prisma.chat.update({
+
+  async archiveChat(id: string): Promise<Chat> {
+    if (!id) throw new Error('Chat Id cannot be empty');
+
+    const chat = await this.prisma.chat.findUnique({
+      where: { id },
+    });
+    if (!chat) throw new Error('Chat not found');
+
+    return await this.prisma.chat.update({
+      where: { id },
+      data: { isArchived: true },
+    });
+  }
+
+  async archiveAllChats(userId: string): Promise<void> {
+    if (!userId) throw new Error('User Id cannot be empty');
+
+    await this.prisma.chat.updateMany({
+      where: { userId },
+      data: { isArchived: true },
+    });
+  }
+
+  async unarchiveChat(id: string): Promise<void> {
+    if (!id) throw new Error('Chat Id cannot be empty');
+
+    const chat = await this.prisma.chat.findUnique({
+      where: { id },
+    });
+    if (!chat) throw new Error('Chat not found');
+
+    await this.prisma.chat.update({
       where: { id },
       data: { isArchived: false },
     });
   }
 
   async deleteChat(id: string): Promise<void> {
+    if (!id) throw new Error('Chat Id cannot be empty');
+
+    const chat = await this.prisma.chat.findUnique({
+      where: { id },
+    });
+    if (!chat) throw new Error('Chat not found');
+
     await this.prisma.$transaction([
       this.prisma.message.deleteMany({
         where: { chatId: id },
