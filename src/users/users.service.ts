@@ -5,15 +5,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async getUserById(id: string): Promise<User | null> {
     return await this.prisma.user.findUnique({
       where: { id },
       include: {
         chats: true,
-        preferences: true
-      }
+        preferences: true,
+      },
     });
   }
 
@@ -25,7 +25,7 @@ export class UsersService {
     await this.prisma.preferences.create({
       data: {
         userId: data.id,
-      }
+      },
     });
 
     return await this.prisma.user.findUnique({
@@ -37,8 +37,8 @@ export class UsersService {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
-    
-    if(!user) throw new Error('User not found');
+
+    if (!user) throw new Error('User not found');
 
     const chats = await this.prisma.chat.findMany({
       where: { userId: id },
@@ -61,7 +61,7 @@ export class UsersService {
       }),
       this.prisma.user.delete({
         where: { id },
-      })
+      }),
     ]);
   }
 }

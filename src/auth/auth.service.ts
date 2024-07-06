@@ -5,17 +5,17 @@ import { UsersService } from 'src/users/users.service';
 declare global {
   namespace Express {
     interface User {
-      id: string,
-      email: string,
-      displayName: string,
-      picture: string
+      id: string;
+      email: string;
+      displayName: string;
+      picture: string;
     }
   }
 }
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   async authenticateWithGoogle(req: Request) {
     if (req.user) {
@@ -26,7 +26,7 @@ export class AuthService {
           email: req.user.email,
           name: req.user.displayName,
           profilePicture: req.user.picture,
-          preferences: {}
+          preferences: {},
         });
         return newUser;
       }

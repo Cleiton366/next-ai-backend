@@ -11,7 +11,9 @@ describe('UsersPreferencesController', () => {
       providers: [UsersPreferencesService],
     }).compile();
 
-    controller = module.get<UsersPreferencesController>(UsersPreferencesController);
+    controller = module.get<UsersPreferencesController>(
+      UsersPreferencesController,
+    );
   });
 
   it('should be defined', () => {

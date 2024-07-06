@@ -5,7 +5,7 @@ import { CreateChatDto } from './dto/create-chat.dto';
 
 @Injectable()
 export class ChatsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async getChat(id: string): Promise<Chat> {
     if (!id) throw new Error('Chat Id cannot be empty');
@@ -23,7 +23,7 @@ export class ChatsService {
     if (!id) throw new Error('User Id cannot be empty');
     return await this.prisma.chat.findMany({
       where: {
-        userId: id
+        userId: id,
       },
       include: {
         messages: true,

@@ -1,7 +1,18 @@
-import { Controller, Body, Param, Put, Logger, Res, HttpException } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Param,
+  Put,
+  Logger,
+  HttpException,
+} from '@nestjs/common';
 import { UsersPreferencesService } from './users-preferences.service';
 import { Preferences } from '@prisma/client';
-import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { UserPreferencesEntity } from './entities/user-preferences.entity';
 import { UpdateUsersPreferenceDto } from './dto/update-users-preference.dto';
@@ -9,7 +20,9 @@ import { UpdateUsersPreferenceDto } from './dto/update-users-preference.dto';
 @ApiTags('Users Preferences')
 @Controller('users-preferences')
 export class UsersPreferencesController {
-  constructor(private readonly usersPreferencesService: UsersPreferencesService) { }
+  constructor(
+    private readonly usersPreferencesService: UsersPreferencesService,
+  ) {}
   private readonly logger = new Logger(UsersPreferencesController.name);
 
   @Put(':id')
@@ -19,17 +32,18 @@ export class UsersPreferencesController {
   async updatePreferences(
     @Param('id') id: string,
     @Body() data: UpdateUsersPreferenceDto,
-    @Res() res,
   ): Promise<Preferences> {
     try {
       return await this.usersPreferencesService.updatePreferences(id, data);
     } catch (error) {
       this.logger.error(error);
-      if (error.message === 'Preferences not found') { throw new HttpException(error.message, 404); }
-      throw new HttpException('Internal server error', 500, { cause: new Error(), description: 'Some error description' }
-      );
+      if (error.message === 'Preferences not found') {
+        throw new HttpException(error.message, 404);
+      }
+      throw new HttpException('Internal server error', 500, {
+        cause: new Error(),
+        description: 'Some error description',
+      });
     }
   }
-
 }
-

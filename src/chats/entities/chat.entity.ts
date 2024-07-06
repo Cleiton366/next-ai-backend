@@ -1,14 +1,13 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Chat, Message } from "@prisma/client";
+import { ApiProperty } from '@nestjs/swagger';
+import { Chat, Message } from '@prisma/client';
 
 export class ChatEntity implements Chat {
-
   @ApiProperty()
   id: string;
 
   @ApiProperty()
   name: string;
-  
+
   @ApiProperty()
   userId: string;
 
@@ -19,5 +18,5 @@ export class ChatEntity implements Chat {
   isArchived: boolean;
 
   @ApiProperty()
-  messages: Message[]
+  messages: Message[];
 }

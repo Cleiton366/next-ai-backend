@@ -5,11 +5,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
-  providers: [
-    AuthService, 
-    UsersService,
-    PrismaService,
-    GoogleStrategy
-  ]
+  providers: [AuthService, UsersService, PrismaService, GoogleStrategy],
 })
 export class AuthModule {}

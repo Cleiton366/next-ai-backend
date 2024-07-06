@@ -6,10 +6,6 @@ import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   controllers: [UsersController],
-  providers: [
-    UsersService,
-    PrismaService,
-    AuthService,
-  ]
+  providers: [UsersService, PrismaService, AuthService],
 })
-export class UsersModule { }
+export class UsersModule {}

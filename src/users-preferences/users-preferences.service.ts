@@ -6,14 +6,17 @@ import { UpdateUsersPreferenceDto } from './dto/update-users-preference.dto';
 @Injectable()
 export class UsersPreferencesService {
   constructor(private prisma: PrismaService) {}
-  
-  async updatePreferences(id: string, data: UpdateUsersPreferenceDto): Promise<Preferences> {
+
+  async updatePreferences(
+    id: string,
+    data: UpdateUsersPreferenceDto,
+  ): Promise<Preferences> {
     const preferences = await this.prisma.preferences.update({
       where: { id },
       data,
     });
 
-    if(!preferences) throw new Error('Preferences not found');
+    if (!preferences) throw new Error('Preferences not found');
     return preferences;
   }
 }
