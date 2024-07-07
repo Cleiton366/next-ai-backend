@@ -21,12 +21,19 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ProviderEntity } from './entities/provider.entity';
+import { providers } from './data/providers.data';
 
 @ApiTags('Providers')
 @Controller('providers')
 export class ProvidersController {
   constructor(private readonly providersService: ProvidersService) {}
   private readonly logger = new Logger(ProvidersController.name);
+
+  @Get()
+  @ApiOkResponse({ type: ProviderEntity, isArray: true })
+  getAllProvidersModels() {
+    return providers;
+  }
 
   @Get('preference/:preferencesId')
   @ApiOkResponse({ type: ProviderEntity, isArray: true })
