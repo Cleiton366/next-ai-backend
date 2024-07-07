@@ -6,5 +6,6 @@ interface Model {
 export default interface Providers {
   name: string;
   url: string;
+  documentationUrl: string;
   models: Model[];
 }
