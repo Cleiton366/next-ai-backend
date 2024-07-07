@@ -30,6 +30,10 @@ export class UsersService {
 
     return await this.prisma.user.findUnique({
       where: { id: data.id },
+      include: {
+        chats: true,
+        preferences: true,
+      },
     });
   }
 
