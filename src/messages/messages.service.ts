@@ -12,11 +12,11 @@ type apiResponse = {
     role: string;
   }[];
   model: string;
-}
+};
 
 @Injectable()
 export class MessagesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
   private readonly axios = new Axios();
 
   async createMessage(data: CreateMessageDto): Promise<Message> {
@@ -37,7 +37,7 @@ export class MessagesService {
       },
       include: {
         apiKeys: true,
-      }
+      },
     });
 
     if (!preferences) throw new Error('Preferences not found');
@@ -53,34 +53,47 @@ export class MessagesService {
         message: response.choices[0].content,
         role: response.model,
         chatId: data.chatId,
-      }
-    })
+      },
+    });
   }
 
-  async handleSendMessage(content: string, preferences: UserPreferencesEntity): Promise<apiResponse> {
-    const defaultProvider = providers.find(provider => provider.name === preferences.defaultProvider);
-    const apiKey = preferences.defaultSource === 'server' ? process.env[preferences.defaultProvider] : preferences.apiKeys.find(apiKey => apiKey.name === preferences.defaultProvider);
+  async handleSendMessage(
+    content: string,
+    preferences: UserPreferencesEntity,
+  ): Promise<apiResponse> {
+    const defaultProvider = providers.find(
+      (provider) => provider.name === preferences.defaultProvider,
+    );
+    const apiKey =
+      preferences.defaultSource === 'server'
+        ? process.env[preferences.defaultProvider]
+        : preferences.apiKeys.find(
+            (apiKey) => apiKey.name === preferences.defaultProvider,
+          );
 
-    if(!apiKey) throw new Error('API key not found or empty');
+    if (!apiKey) throw new Error('API key not found or empty');
 
-    const res: apiResponse = await this.axios.post(defaultProvider.url, {
-      'model': preferences.defaultModel,
-      'messages': [
-        {
-          'content': content,
-          'role': 'user'
-        }
-      ]
-    },
+    const res: apiResponse = await this.axios.post(
+      defaultProvider.url,
+      {
+        model: preferences.defaultModel,
+        messages: [
+          {
+            content: content,
+            role: 'user',
+          },
+        ],
+      },
       {
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    )
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
 
-    if (!res.choices[0].content) throw new Error('Invalid response from provider');
+    if (!res.choices[0].content)
+      throw new Error('Invalid response from provider');
     return res;
   }
 }

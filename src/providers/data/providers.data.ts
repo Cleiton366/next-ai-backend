@@ -1,6 +1,6 @@
-import Providers from "./interfaces/providers.interface";
+import Providers from './interfaces/providers.interface';
 
-export const providers : Providers[] = [
+export const providers: Providers[] = [
   {
     name: 'ShuttleAi',
     url: 'https://api.shuttleai.app/v1/chat/completions',
@@ -15,21 +15,21 @@ export const providers : Providers[] = [
       },
       {
         id: 'claude-instant-1.0',
-        name: 'Claude Instant 1.0'
+        name: 'Claude Instant 1.0',
       },
       {
         id: 'dolphin-2.6-mixtral-8x7b',
-        name: 'Dolphin 2.6 Mixtral 8x7b'
+        name: 'Dolphin 2.6 Mixtral 8x7b',
       },
       {
         id: 'mistral-medium',
-        name: 'Mistral Medium'
+        name: 'Mistral Medium',
       },
       {
         id: 'mistral-7b-instruct-v0.1',
-        name: 'Mistral 7b Instruct v0.1'
-      }
-    ]
+        name: 'Mistral 7b Instruct v0.1',
+      },
+    ],
   },
   {
     name: 'Open Router',
@@ -37,25 +37,25 @@ export const providers : Providers[] = [
     models: [
       {
         id: 'mistralai/mistral-7b-instruct:free',
-        name: 'Mistral 7b Instruct Free'
+        name: 'Mistral 7b Instruct Free',
       },
       {
         id: 'microsoft/phi-3-medium-128k-instruct:free',
-        name: 'Microsoft Phi 3 Medium 128k Instruct Free'
+        name: 'Microsoft Phi 3 Medium 128k Instruct Free',
       },
       {
         id: 'meta-llama/llama-3-8b-instruct:free',
-        name: 'Meta Llama 3 8b Instruct Free'
+        name: 'Meta Llama 3 8b Instruct Free',
       },
       {
         id: 'microsoft/phi-3-mini-128k-instruct:free',
-        name: 'Microsoft Phi 3 Mini 128k Instruct Free'
+        name: 'Microsoft Phi 3 Mini 128k Instruct Free',
       },
       {
         id: 'google/gemma-2-9b-it:free',
-        name: 'Google Gemma 2 9b IT Free'
-      }
-    ]
+        name: 'Google Gemma 2 9b IT Free',
+      },
+    ],
   },
   {
     name: 'Groq',
@@ -63,21 +63,21 @@ export const providers : Providers[] = [
     models: [
       {
         id: 'llama3-8b-8192',
-        name: 'Llama3 8b 8192'
+        name: 'Llama3 8b 8192',
       },
       {
         id: 'llama3-70b-8192',
-        name: 'Llama3 70b 8192'
+        name: 'Llama3 70b 8192',
       },
       {
         id: 'mixtral-8x7b-32768',
-        name: 'Mixtral 8x7b'
+        name: 'Mixtral 8x7b',
       },
       {
         id: 'gemma2-9b-it',
-        name: 'Gemma2 9b'
-      }
-    ]
+        name: 'Gemma2 9b',
+      },
+    ],
   },
   {
     name: 'Awan LLM',
@@ -85,20 +85,20 @@ export const providers : Providers[] = [
     models: [
       {
         id: 'Meta-Llama-3-8B-Instruct',
-        name: 'Meta Llama 3 8B Instruct'
+        name: 'Meta Llama 3 8B Instruct',
       },
       {
         id: 'Awanllm-Llama-3-8B-Dolfin',
-        name: 'Awanllm Llama 3 8B Dolfin'
+        name: 'Awanllm Llama 3 8B Dolfin',
       },
       {
         id: 'Awanllm-Llama-3-8B-Cumulus',
-        name: 'Awanllm Llama 3 8B Cumulus'
+        name: 'Awanllm Llama 3 8B Cumulus',
       },
       {
         id: 'Meta-Llama-3-70B-Instruct',
-        name: 'Meta Llama 3 70B Instruct'
-      }
-    ]
-  }
-]
+        name: 'Meta Llama 3 70B Instruct',
+      },
+    ],
+  },
+];
