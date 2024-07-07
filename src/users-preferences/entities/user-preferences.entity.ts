@@ -9,6 +9,9 @@ export class UserPreferencesEntity implements Preferences {
   userId: string;
 
   @ApiProperty()
+  defaultSource: string;
+
+  @ApiProperty()
   defaultProvider: string;
 
   @ApiProperty()

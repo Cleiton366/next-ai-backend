@@ -14,17 +14,18 @@ datasource db {
 }
 
 model User {
-  id             String      @id @default(uuid())
+  id             String       @id @default(uuid())
   name           String
-  email          String      @unique
+  email          String       @unique
   profilePicture String
   chats          Chat[]
-  preferences    Preferences ?
+  preferences    Preferences?
 }
 
 model Preferences {
   id              String     @id @default(uuid())
-  defaultProvider String     @default("server")
+  defaultSource   String     @default("server")
+  defaultProvider String     @default("ShuttleAi")
   defaultModel    String     @default("shuttle-2-turbo")
   userId          String     @unique
   user            User       @relation(fields: [userId], references: [id])
