@@ -5,5 +5,6 @@ interface Model {
 
 export default interface Providers {
   name: string,
+  url: string,
   models: Model[]
 }

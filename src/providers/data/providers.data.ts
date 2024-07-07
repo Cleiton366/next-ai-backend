@@ -3,6 +3,7 @@ import Providers from "./interfaces/providers.interface";
 export const providers : Providers[] = [
   {
     name: 'ShuttleAi',
+    url: 'https://api.shuttleai.app/v1/chat/completions',
     models: [
       {
         id: 'shuttle-2-turbo',
@@ -32,6 +33,7 @@ export const providers : Providers[] = [
   },
   {
     name: 'Open Router',
+    url: 'https://openrouter.ai/api/v1/chat/completions',
     models: [
       {
         id: 'mistralai/mistral-7b-instruct:free',
@@ -57,6 +59,7 @@ export const providers : Providers[] = [
   },
   {
     name: 'Groq',
+    url: 'https://api.groq.com/openai/v1/chat/completions',
     models: [
       {
         id: 'llama3-8b-8192',
@@ -78,6 +81,7 @@ export const providers : Providers[] = [
   },
   {
     name: 'Awan LLM',
+    url: 'https://api.awanllm.com/v1/chat/completions',
     models: [
       {
         id: 'Meta-Llama-3-8B-Instruct',
