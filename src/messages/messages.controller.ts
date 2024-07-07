@@ -29,12 +29,18 @@ export class MessagesController {
       this.logger.error(error);
       if (error.message === 'Chat not found')
         throw new HttpException(error.message, 404);
+      if (error.message === 'Preferences not found')
+        throw new HttpException(error.message, 404);
+      if (error.message === 'API key not found or empty')
+        throw new HttpException(error.message, 404);
       if (error.message === 'Invalid role')
         throw new HttpException(error.message, 400);
       if (error.message === 'Message too long')
         throw new HttpException(error.message, 400);
       if (error.message === 'Message cannot be empty')
         throw new HttpException(error.message, 400);
+      if (error.message === 'Invalid response from provider')
+        throw new HttpException(error.message, 500);
       throw new HttpException('Internal server error', 500, {
         cause: new Error(),
       });
