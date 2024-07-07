@@ -25,7 +25,7 @@ model User {
 model Preferences {
   id              String     @id @default(uuid())
   defaultSource   String     @default("server")
-  defaultProvider String     @default("ShuttleAi")
+  defaultProvider String     @default("SHUTTLE_AI")
   defaultModel    String     @default("shuttle-2-turbo")
   userId          String     @unique
   user            User       @relation(fields: [userId], references: [id])

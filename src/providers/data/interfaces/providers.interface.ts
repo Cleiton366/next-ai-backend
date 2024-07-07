@@ -4,6 +4,7 @@ interface Model {
 }
 
 export default interface Providers {
+  id: string;
   name: string;
   url: string;
   documentationUrl: string;
