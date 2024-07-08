@@ -25,6 +25,7 @@ export class ChatsService {
     return await this.prisma.chat.findMany({
       where: {
         userId: id,
+        isArchived: false,
       },
       include: {
         messages: true,
