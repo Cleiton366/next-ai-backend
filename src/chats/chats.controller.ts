@@ -101,7 +101,7 @@ export class ChatsController {
     }
   }
 
-  @Delete(':id')
+  @Delete('/delete/:id')
   @ApiOkResponse()
   @ApiBadRequestResponse({ description: 'Invalid Request' })
   @ApiNotFoundResponse({ description: 'Chat not found' })
@@ -121,7 +121,7 @@ export class ChatsController {
     }
   }
 
-  @Delete('/user/:userId')
+  @Delete('/delete-all/:userId')
   @ApiOkResponse()
   @ApiBadRequestResponse({ description: 'Invalid Request' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
