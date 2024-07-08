@@ -1,6 +1,6 @@
-import { Controller, Get, Param, Logger, HttpException, Patch } from '@nestjs/common';
+import { Controller, Get, Param, Logger, HttpException, Patch, Delete } from '@nestjs/common';
 import { ArchivesService } from './archives.service';
-import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ChatEntity } from 'src/chats/entities/chat.entity';
 import { Chat } from '@prisma/client';
 
@@ -46,6 +46,7 @@ export class ArchivesController {
 
   @Patch('archive/:id')
   @ApiOkResponse()
+  @ApiNotFoundResponse({ description: 'Chat not found' })
   @ApiBadRequestResponse({ description: 'Invalid Request' })
   async archiveChat(@Param('id') id: string): Promise<void> {
     try {
@@ -64,6 +65,7 @@ export class ArchivesController {
 
   @Patch('unarchive/:id')
   @ApiOkResponse({ type: ChatEntity })
+  @ApiNotFoundResponse({ description: 'Chat not found' })
   @ApiBadRequestResponse({ description: 'Invalid Request' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async unarchiveChat(@Param('id') id: string): Promise<void> {
@@ -72,6 +74,45 @@ export class ArchivesController {
     } catch (error) {
       this.logger.error(error);
       if (error.message === 'Chat Id cannot be empty')
+        throw new HttpException(error.message, 400);
+      if (error.message === 'Chat not found')
+        throw new HttpException(error.message, 404);
+      throw new HttpException('Internal server error', 500, {
+        cause: new Error(),
+      });
+    }
+  }
+
+  @Delete('delete/:id')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({ description: 'Invalid Request' })
+  @ApiNotFoundResponse({ description: 'Chat not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  async deleteArchivedChat(@Param('id') id: string): Promise<void> {
+    try {
+      await this.archivesService.deleteArchivedChat(id);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message === 'Chat Id cannot be empty')
+        throw new HttpException(error.message, 400);
+      if (error.message === 'Chat not found')
+        throw new HttpException(error.message, 404);
+      throw new HttpException('Internal server error', 500, {
+        cause: new Error(),
+      });
+    }
+  }
+
+  @Delete('delete-all/:userId')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({ description: 'Invalid Request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  async deleteAllArchivedChats(@Param('userId') userId: string): Promise<void> {
+    try {
+      await this.archivesService.deleteAllArchivedChats(userId);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message === 'User Id cannot be empty')
         throw new HttpException(error.message, 400);
       throw new HttpException('Internal server error', 500, {
         cause: new Error(),

@@ -57,4 +57,28 @@ export class ArchivesService {
       data: { isArchived: false },
     });
   }
+
+  async deleteArchivedChat(id: string): Promise<void> {
+    if (!id) throw new Error('Chat Id cannot be empty');
+
+    const chat = await this.prisma.chat.findUnique({
+      where: { id },
+    });
+    if (!chat) throw new Error('Chat not found');
+
+    await this.prisma.chat.delete({
+      where: { id },
+    });
+  }
+
+  async deleteAllArchivedChats(userId: string): Promise<void> {
+    if (!userId) throw new Error('User Id cannot be empty');
+
+    await this.prisma.chat.deleteMany({
+      where: {
+        userId,
+        isArchived: true,
+      },
+    });
+  }
 }
