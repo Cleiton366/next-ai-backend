@@ -8,7 +8,9 @@ import { UserPreferencesEntity } from 'src/users-preferences/entities/user-prefe
 
 type apiResponse = {
   choices: {
-    content: string;
+    message: {
+      content: string;
+    };
     role: string;
   }[];
   model: string;
@@ -16,7 +18,7 @@ type apiResponse = {
 
 @Injectable()
 export class MessagesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
   private readonly axios = new Axios();
 
   async createMessage(data: CreateMessageDto): Promise<Message> {
@@ -50,7 +52,7 @@ export class MessagesService {
 
     return this.prisma.message.create({
       data: {
-        message: response.choices[0].content,
+        message: response.choices[0].message.content,
         role: response.model,
         chatId: data.chatId,
       },
@@ -62,20 +64,24 @@ export class MessagesService {
     preferences: UserPreferencesEntity,
   ): Promise<apiResponse> {
     const defaultProvider = providers.find(
-      (provider) => provider.name === preferences.defaultProvider,
+      (provider) => provider.id === preferences.defaultProvider,
     );
     const apiKey =
       preferences.defaultSource === 'server'
         ? process.env[preferences.defaultProvider]
         : preferences.apiKeys.find(
-            (apiKey) => apiKey.name === preferences.defaultProvider,
-          );
+          (apiKey) => apiKey.name === preferences.defaultProvider,
+        );
 
     if (!apiKey) throw new Error('API key not found or empty');
 
-    const res: apiResponse = await this.axios.post(
-      defaultProvider.url,
-      {
+    const res = await fetch(defaultProvider.url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         model: preferences.defaultModel,
         messages: [
           {
@@ -83,17 +89,13 @@ export class MessagesService {
             role: 'user',
           },
         ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    );
+      }),
+    });
 
-    if (!res.choices[0].content)
+    const data: apiResponse = await res.json();
+
+    if (!data.choices[0].message)
       throw new Error('Invalid response from provider');
-    return res;
+    return data;
   }
 }
