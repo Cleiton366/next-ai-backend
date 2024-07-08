@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Chat } from '@prisma/client';
 import { CreateChatDto } from './dto/create-chat.dto';
+import { UpdateChatDto } from './dto/update-chat.dto';
 
 @Injectable()
 export class ChatsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getChat(id: string): Promise<Chat> {
     if (!id) throw new Error('Chat Id cannot be empty');
@@ -36,6 +37,19 @@ export class ChatsService {
     if (!data.name) throw new Error('Chat name cannot be empty');
 
     return await this.prisma.chat.create({
+      data,
+      include: {
+        messages: true,
+      },
+    });
+  }
+
+  async renameChat(id: string, data: UpdateChatDto): Promise<Chat> {
+    if (!id) throw new Error('Chat Id cannot be empty');
+    if (!data.name) throw new Error('Chat name cannot be empty');
+
+    return await this.prisma.chat.update({
+      where: { id },
       data,
       include: {
         messages: true,
