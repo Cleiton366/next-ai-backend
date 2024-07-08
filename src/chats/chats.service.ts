@@ -75,4 +75,22 @@ export class ChatsService {
       }),
     ]);
   }
+
+  async deleteAllChats(userId: string): Promise<void> {
+    if (!userId) throw new Error('User Id cannot be empty');
+
+    const chats = await this.prisma.chat.findMany({
+      where: { userId },
+    });
+    if (!chats) throw new Error('Chats not found or empty');
+
+    await this.prisma.$transaction([
+      this.prisma.message.deleteMany({
+        where: { chatId: { in: chats.map((chat) => chat.id) } },
+      }),
+      this.prisma.chat.deleteMany({
+        where: { userId },
+      }),
+    ]);
+  }
 }

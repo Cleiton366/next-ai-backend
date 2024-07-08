@@ -120,4 +120,21 @@ export class ChatsController {
       });
     }
   }
+
+  @Delete('/user/:userId')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({ description: 'Invalid Request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  async deleteAllChats(@Param('userId') userId: string): Promise<void> {
+    try {
+      await this.chatsService.deleteAllChats(userId);
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message === 'User Id cannot be empty')
+        throw new HttpException(error.message, 400);
+      throw new HttpException('Internal server error', 500, {
+        cause: new Error(),
+      });
+    }
+  }
 }
