@@ -66,9 +66,14 @@ export class ArchivesService {
     });
     if (!chat) throw new Error('Chat not found');
 
-    await this.prisma.chat.delete({
-      where: { id },
-    });
+    await this.prisma.$transaction([
+      this.prisma.message.deleteMany({
+        where: { chatId: id },
+      }),
+      this.prisma.chat.delete({
+        where: { id },
+      }),
+    ]);
   }
 
   async deleteAllArchivedChats(userId: string): Promise<void> {
