@@ -2,9 +2,9 @@ import {
   Controller,
   Body,
   Param,
-  Put,
   Logger,
   HttpException,
+  Patch,
 } from '@nestjs/common';
 import { UsersPreferencesService } from './users-preferences.service';
 import { Preferences } from '@prisma/client';
@@ -25,7 +25,7 @@ export class UsersPreferencesController {
   ) {}
   private readonly logger = new Logger(UsersPreferencesController.name);
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOkResponse({ type: UserPreferencesEntity })
   @ApiNotFoundResponse({ description: 'Preferences not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
