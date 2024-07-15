@@ -1,4 +1,4 @@
-import Providers from './interfaces/providers.interface';
+import Providers from '../entities/providers-models.entity';
 
 export const providers: Providers[] = [
   {

@@ -21,6 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ProviderEntity } from './entities/provider.entity';
+import Providers from './entities/providers-models.entity';
 import { providers } from './data/providers.data';
 
 @ApiTags('Providers')
@@ -30,7 +31,7 @@ export class ProvidersController {
   private readonly logger = new Logger(ProvidersController.name);
 
   @Get()
-  @ApiOkResponse({ type: ProviderEntity, isArray: true })
+  @ApiOkResponse({ type: Providers, isArray: true })
   getAllProvidersModels() {
     return providers;
   }
