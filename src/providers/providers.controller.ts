@@ -86,7 +86,7 @@ export class ProvidersController {
       this.logger.error(error);
       if (error.message === 'Key cannot be empty')
         throw new HttpException(error.message, 400);
-      if (error.message === 'Preferences ID cannot be empty')
+      if (error.message === 'Provider ID cannot be empty')
         throw new HttpException(error.message, 400);
       throw new HttpException('Internal server error', 500, {
         cause: new Error(),

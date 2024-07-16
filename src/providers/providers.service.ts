@@ -52,7 +52,7 @@ export class ProvidersService {
 
   async updateProvider(id: string, data: UpdateProviderDto): Promise<Provider> {
     if (!data.key) throw new Error('Key cannot be empty');
-    if (!data.preferencesId) throw new Error('Preferences ID cannot be empty');
+    if (!id) throw new Error('Provider ID cannot be empty');
 
     return await this.prisma.provider.update({
       where: { id },
