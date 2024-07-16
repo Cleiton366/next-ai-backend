@@ -12,11 +12,7 @@ export class UsersService {
       where: { id },
       include: {
         chats: true,
-        preferences: {
-          include: {
-            apiKeys: true,
-          },
-        },
+        preferences: true,
       },
     });
   }
