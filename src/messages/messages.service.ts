@@ -70,8 +70,8 @@ export class MessagesService {
       preferences.defaultSource === 'server'
         ? process.env[preferences.defaultProvider]
         : preferences.apiKeys.find(
-          (apiKey) => apiKey.name === preferences.defaultProvider,
-        );
+          (apiKey) => apiKey.name === defaultProvider.name,
+        ).key;
 
     if (!apiKey) throw new Error('API key not found or empty');
 
