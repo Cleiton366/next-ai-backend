@@ -9,4 +9,7 @@ export class UpdateUsersPreferenceDto extends PartialType(
 
   @ApiProperty()
   defaultModel: string;
+
+  @ApiProperty()
+  defaultSource: string;
 }
