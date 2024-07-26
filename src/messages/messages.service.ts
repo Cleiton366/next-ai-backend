@@ -94,7 +94,7 @@ export class MessagesService {
 
     const data: apiResponse = await res.json();
 
-    if (!data.choices[0].message)
+    if (!data.choices)
       throw new Error('Invalid response from provider');
     return data;
   }
